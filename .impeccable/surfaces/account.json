@@ -1,0 +1,26 @@
+{
+  "mode": "operate",
+  "routes": [
+    "/account",
+    "/account/link",
+    "/connect/{token}",
+    "/account/{token}"
+  ],
+  "buildPath": "code",
+  "approvedComp": null,
+  "THESIS": "The recipient sees their current access conditions and can connect or ask for renewal from one cabinet.",
+  "OWN-WORLD": "Existing Living line system; compact light surfaces, cobalt actions, meaningful amber/rose notifications.",
+  "STORY": "Sign in with owner-issued username/password; retain login if desired; inspect account conditions and warnings; copy/import subscription or contact owner; optionally change password after confirming current credentials; logout.",
+  "FIRST VIEWPORT": "Fixed-size account heading, named access status, exact date, remaining term and traffic; mobile stacks the two condition panels.",
+  "BEHAVIOR": "Separate HttpOnly recipient sessions; hashed passwords and session tokens, trusted Origin and logout CSRF, bounded failed attempts. Admin issues/reset credentials; reset/rename/archive revoke user sessions. Existing bearer links stay compatible. Self-service password change rotates the current session, preserves its expiry and remembered preference, and revokes all other sessions; five incorrect current-password attempts are allowed per 15 minutes.",
+  "FORM": "Local extension of established identity; no concept seed or new image comp required.",
+  "constraints": [
+    "Owner-issued credentials; no public signup, payment or fake password recovery.",
+    "Passwords shown only in issuance/reset UI; never repeated in ordinary reads.",
+    "Preserve VPN keys, data, warnings and stopped-access inspection.",
+    "Remembered login lasts up to 30 days; unremembered server sessions up to12h.",
+    "Legacy personal-link entry remains available, so bearer links remain secrets.",
+    "Self-service password updates require current password, matching 12+ character new password, a cookie session and CSRF; bearer links are insufficient."
+  ],
+  "verification": ".impeccable/review/self-password/report.json; scripts/verify_account_password.py; existing account/lifecycle checks retained."
+}

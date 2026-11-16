@@ -1,0 +1,460 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-11-16T10:12:04.168915+00:00",
+  "title": "Design System: Линия — Живая линия",
+  "extensions": {
+    "colorMeta": {
+      "bg": {
+        "role": "neutral",
+        "displayName": "bg",
+        "canonical": "#f5f6f8",
+        "tonalRamp": [
+          "hsl(220.00 17.65% 15%)",
+          "hsl(220.00 17.65% 27%)",
+          "hsl(220.00 17.65% 39%)",
+          "hsl(220.00 17.65% 51%)",
+          "hsl(220.00 17.65% 63%)",
+          "hsl(220.00 17.65% 75%)",
+          "hsl(220.00 17.65% 85%)",
+          "hsl(220.00 17.65% 95%)"
+        ]
+      },
+      "surface": {
+        "role": "neutral",
+        "displayName": "surface",
+        "canonical": "#ffffff",
+        "tonalRamp": [
+          "hsl(0.00 0.00% 15%)",
+          "hsl(0.00 0.00% 27%)",
+          "hsl(0.00 0.00% 39%)",
+          "hsl(0.00 0.00% 51%)",
+          "hsl(0.00 0.00% 63%)",
+          "hsl(0.00 0.00% 75%)",
+          "hsl(0.00 0.00% 85%)",
+          "hsl(0.00 0.00% 95%)"
+        ]
+      },
+      "raised": {
+        "role": "neutral",
+        "displayName": "raised",
+        "canonical": "#eceef3",
+        "tonalRamp": [
+          "hsl(222.86 22.58% 15%)",
+          "hsl(222.86 22.58% 27%)",
+          "hsl(222.86 22.58% 39%)",
+          "hsl(222.86 22.58% 51%)",
+          "hsl(222.86 22.58% 63%)",
+          "hsl(222.86 22.58% 75%)",
+          "hsl(222.86 22.58% 85%)",
+          "hsl(222.86 22.58% 95%)"
+        ]
+      },
+      "line": {
+        "role": "neutral",
+        "displayName": "line",
+        "canonical": "#dce0e8",
+        "tonalRamp": [
+          "hsl(220.00 20.69% 15%)",
+          "hsl(220.00 20.69% 27%)",
+          "hsl(220.00 20.69% 39%)",
+          "hsl(220.00 20.69% 51%)",
+          "hsl(220.00 20.69% 63%)",
+          "hsl(220.00 20.69% 75%)",
+          "hsl(220.00 20.69% 85%)",
+          "hsl(220.00 20.69% 95%)"
+        ]
+      },
+      "text": {
+        "role": "neutral",
+        "displayName": "text",
+        "canonical": "#18202e",
+        "tonalRamp": [
+          "hsl(218.18 31.43% 15%)",
+          "hsl(218.18 31.43% 27%)",
+          "hsl(218.18 31.43% 39%)",
+          "hsl(218.18 31.43% 51%)",
+          "hsl(218.18 31.43% 63%)",
+          "hsl(218.18 31.43% 75%)",
+          "hsl(218.18 31.43% 85%)",
+          "hsl(218.18 31.43% 95%)"
+        ]
+      },
+      "muted": {
+        "role": "neutral",
+        "displayName": "muted",
+        "canonical": "#626b7c",
+        "tonalRamp": [
+          "hsl(219.23 11.71% 15%)",
+          "hsl(219.23 11.71% 27%)",
+          "hsl(219.23 11.71% 39%)",
+          "hsl(219.23 11.71% 51%)",
+          "hsl(219.23 11.71% 63%)",
+          "hsl(219.23 11.71% 75%)",
+          "hsl(219.23 11.71% 85%)",
+          "hsl(219.23 11.71% 95%)"
+        ]
+      },
+      "accent": {
+        "role": "primary",
+        "displayName": "accent",
+        "canonical": "#1759e8",
+        "tonalRamp": [
+          "hsl(221.05 81.96% 15%)",
+          "hsl(221.05 81.96% 27%)",
+          "hsl(221.05 81.96% 39%)",
+          "hsl(221.05 81.96% 51%)",
+          "hsl(221.05 81.96% 63%)",
+          "hsl(221.05 81.96% 75%)",
+          "hsl(221.05 81.96% 85%)",
+          "hsl(221.05 81.96% 95%)"
+        ]
+      },
+      "accent-hover": {
+        "role": "primary",
+        "displayName": "accent-hover",
+        "canonical": "#0646ce",
+        "tonalRamp": [
+          "hsl(220.80 94.34% 15%)",
+          "hsl(220.80 94.34% 27%)",
+          "hsl(220.80 94.34% 39%)",
+          "hsl(220.80 94.34% 51%)",
+          "hsl(220.80 94.34% 63%)",
+          "hsl(220.80 94.34% 75%)",
+          "hsl(220.80 94.34% 85%)",
+          "hsl(220.80 94.34% 95%)"
+        ]
+      },
+      "green": {
+        "role": "semantic",
+        "displayName": "green",
+        "canonical": "#177950",
+        "tonalRamp": [
+          "hsl(154.90 68.06% 15%)",
+          "hsl(154.90 68.06% 27%)",
+          "hsl(154.90 68.06% 39%)",
+          "hsl(154.90 68.06% 51%)",
+          "hsl(154.90 68.06% 63%)",
+          "hsl(154.90 68.06% 75%)",
+          "hsl(154.90 68.06% 85%)",
+          "hsl(154.90 68.06% 95%)"
+        ]
+      },
+      "danger": {
+        "role": "semantic",
+        "displayName": "danger",
+        "canonical": "#bf3345",
+        "tonalRamp": [
+          "hsl(352.29 57.85% 15%)",
+          "hsl(352.29 57.85% 27%)",
+          "hsl(352.29 57.85% 39%)",
+          "hsl(352.29 57.85% 51%)",
+          "hsl(352.29 57.85% 63%)",
+          "hsl(352.29 57.85% 75%)",
+          "hsl(352.29 57.85% 85%)",
+          "hsl(352.29 57.85% 95%)"
+        ]
+      },
+      "navy": {
+        "role": "neutral",
+        "displayName": "navy",
+        "canonical": "#0d1525",
+        "tonalRamp": [
+          "hsl(220.00 48.00% 15%)",
+          "hsl(220.00 48.00% 27%)",
+          "hsl(220.00 48.00% 39%)",
+          "hsl(220.00 48.00% 51%)",
+          "hsl(220.00 48.00% 63%)",
+          "hsl(220.00 48.00% 75%)",
+          "hsl(220.00 48.00% 85%)",
+          "hsl(220.00 48.00% 95%)"
+        ]
+      },
+      "sidebar": {
+        "role": "neutral",
+        "displayName": "sidebar",
+        "canonical": "#f0f2f6",
+        "tonalRamp": [
+          "hsl(220.00 25.00% 15%)",
+          "hsl(220.00 25.00% 27%)",
+          "hsl(220.00 25.00% 39%)",
+          "hsl(220.00 25.00% 51%)",
+          "hsl(220.00 25.00% 63%)",
+          "hsl(220.00 25.00% 75%)",
+          "hsl(220.00 25.00% 85%)",
+          "hsl(220.00 25.00% 95%)"
+        ]
+      },
+      "selected": {
+        "role": "neutral",
+        "displayName": "selected",
+        "canonical": "#e0e9fc",
+        "tonalRamp": [
+          "hsl(220.71 82.35% 15%)",
+          "hsl(220.71 82.35% 27%)",
+          "hsl(220.71 82.35% 39%)",
+          "hsl(220.71 82.35% 51%)",
+          "hsl(220.71 82.35% 63%)",
+          "hsl(220.71 82.35% 75%)",
+          "hsl(220.71 82.35% 85%)",
+          "hsl(220.71 82.35% 95%)"
+        ]
+      },
+      "account-term": {
+        "role": "primary",
+        "displayName": "account-term",
+        "canonical": "#123d92",
+        "tonalRamp": [
+          "hsl(219.84 78.05% 15%)",
+          "hsl(219.84 78.05% 27%)",
+          "hsl(219.84 78.05% 39%)",
+          "hsl(219.84 78.05% 51%)",
+          "hsl(219.84 78.05% 63%)",
+          "hsl(219.84 78.05% 75%)",
+          "hsl(219.84 78.05% 85%)",
+          "hsl(219.84 78.05% 95%)"
+        ]
+      },
+      "notice-warning-bg": {
+        "role": "semantic",
+        "displayName": "notice-warning-bg",
+        "canonical": "#fff0d8",
+        "tonalRamp": [
+          "hsl(36.92 100.00% 15%)",
+          "hsl(36.92 100.00% 27%)",
+          "hsl(36.92 100.00% 39%)",
+          "hsl(36.92 100.00% 51%)",
+          "hsl(36.92 100.00% 63%)",
+          "hsl(36.92 100.00% 75%)",
+          "hsl(36.92 100.00% 85%)",
+          "hsl(36.92 100.00% 95%)"
+        ]
+      },
+      "notice-warning-text": {
+        "role": "semantic",
+        "displayName": "notice-warning-text",
+        "canonical": "#765010",
+        "tonalRamp": [
+          "hsl(37.65 76.12% 15%)",
+          "hsl(37.65 76.12% 27%)",
+          "hsl(37.65 76.12% 39%)",
+          "hsl(37.65 76.12% 51%)",
+          "hsl(37.65 76.12% 63%)",
+          "hsl(37.65 76.12% 75%)",
+          "hsl(37.65 76.12% 85%)",
+          "hsl(37.65 76.12% 95%)"
+        ]
+      },
+      "notice-critical-bg": {
+        "role": "semantic",
+        "displayName": "notice-critical-bg",
+        "canonical": "#fce9ec",
+        "tonalRamp": [
+          "hsl(350.53 76.00% 15%)",
+          "hsl(350.53 76.00% 27%)",
+          "hsl(350.53 76.00% 39%)",
+          "hsl(350.53 76.00% 51%)",
+          "hsl(350.53 76.00% 63%)",
+          "hsl(350.53 76.00% 75%)",
+          "hsl(350.53 76.00% 85%)",
+          "hsl(350.53 76.00% 95%)"
+        ]
+      },
+      "notice-critical-text": {
+        "role": "semantic",
+        "displayName": "notice-critical-text",
+        "canonical": "#972a3e",
+        "tonalRamp": [
+          "hsl(348.99 56.48% 15%)",
+          "hsl(348.99 56.48% 27%)",
+          "hsl(348.99 56.48% 39%)",
+          "hsl(348.99 56.48% 51%)",
+          "hsl(348.99 56.48% 63%)",
+          "hsl(348.99 56.48% 75%)",
+          "hsl(348.99 56.48% 85%)",
+          "hsl(348.99 56.48% 95%)"
+        ]
+      },
+      "notice-ok-bg": {
+        "role": "semantic",
+        "displayName": "notice-ok-bg",
+        "canonical": "#e8f2ed",
+        "tonalRamp": [
+          "hsl(150.00 27.78% 15%)",
+          "hsl(150.00 27.78% 27%)",
+          "hsl(150.00 27.78% 39%)",
+          "hsl(150.00 27.78% 51%)",
+          "hsl(150.00 27.78% 63%)",
+          "hsl(150.00 27.78% 75%)",
+          "hsl(150.00 27.78% 85%)",
+          "hsl(150.00 27.78% 95%)"
+        ]
+      },
+      "notice-ok-text": {
+        "role": "semantic",
+        "displayName": "notice-ok-text",
+        "canonical": "#246449",
+        "tonalRamp": [
+          "hsl(154.69 47.06% 15%)",
+          "hsl(154.69 47.06% 27%)",
+          "hsl(154.69 47.06% 39%)",
+          "hsl(154.69 47.06% 51%)",
+          "hsl(154.69 47.06% 63%)",
+          "hsl(154.69 47.06% 75%)",
+          "hsl(154.69 47.06% 85%)",
+          "hsl(154.69 47.06% 95%)"
+        ]
+      }
+    },
+    "typographyMeta": {
+      "display": {
+        "displayName": "Public display",
+        "purpose": "Hero headline, fluid scale."
+      },
+      "heading": {
+        "displayName": "Section headline",
+        "purpose": "Public section hierarchy."
+      },
+      "body": {
+        "displayName": "Onest body",
+        "purpose": "Cyrillic UI and reading text."
+      }
+    },
+    "shadows": [
+      {
+        "name": "drawer",
+        "value": "-15px 0 60px #102c5533",
+        "purpose": "Transient right-edge dialog."
+      },
+      {
+        "name": "toast",
+        "value": "0 12px 40px #0e274b26",
+        "purpose": "Transient status feedback."
+      },
+      {
+        "name": "mobile-menu",
+        "value": "0 18px 35px #1a2d5026",
+        "purpose": "Expanded public menu."
+      }
+    ],
+    "motion": [
+      {
+        "name": "ease",
+        "value": "cubic-bezier(.16,1,.3,1)",
+        "purpose": "Authored reveals and responsive controls."
+      },
+      {
+        "name": "drawer",
+        "value": ".35s cubic-bezier(.32,.72,0,1)",
+        "purpose": "Modal entrance."
+      },
+      {
+        "name": "reduced-motion",
+        "value": "prefers-reduced-motion: reduce",
+        "purpose": "Disable all decorative motion."
+      }
+    ],
+    "breakpoints": [
+      {
+        "name": "desktop-small",
+        "value": "1150px"
+      },
+      {
+        "name": "tablet",
+        "value": "850px"
+      },
+      {
+        "name": "phone",
+        "value": "650px"
+      }
+    ]
+  },
+  "components": [
+    {
+      "name": "Primary button",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "Existing primary action treatment.",
+      "html": "<button class=\"ds-primary\">Открыть доступ</button>",
+      "css": ".ds-primary{font:550 14px/1.4 \"Onest Variable\",sans-serif;min-height:48px;padding:13px 23px;border:0;border-radius:100px;background:var(--accent,#1759e8);color:#fff;cursor:pointer;transition:transform .2s cubic-bezier(.16,1,.3,1),background .2s}.ds-primary:hover{filter:brightness(.96)}.ds-primary:active{transform:scale(.96)}.ds-primary:focus-visible{outline:3px solid var(--accent,#1759e8);outline-offset:5px}"
+    },
+    {
+      "name": "Secondary button",
+      "kind": "button",
+      "refersTo": "button-secondary",
+      "description": "Existing secondary action treatment.",
+      "html": "<button class=\"ds-secondary\">Открыть доступ</button>",
+      "css": ".ds-secondary{font:550 14px/1.4 \"Onest Variable\",sans-serif;min-height:48px;padding:13px 23px;border:0;border-radius:100px;background:#e9edf5;color:#263650;cursor:pointer;transition:transform .2s cubic-bezier(.16,1,.3,1),background .2s}.ds-secondary:hover{filter:brightness(.96)}.ds-secondary:active{transform:scale(.96)}.ds-secondary:focus-visible{outline:3px solid var(--accent,#1759e8);outline-offset:5px}"
+    },
+    {
+      "name": "Danger button",
+      "kind": "button",
+      "refersTo": "button-danger",
+      "description": "Existing danger action treatment.",
+      "html": "<button class=\"ds-danger\">Открыть доступ</button>",
+      "css": ".ds-danger{font:550 14px/1.4 \"Onest Variable\",sans-serif;min-height:48px;padding:13px 23px;border:0;border-radius:100px;background:#fbe6e9;color:#a42337;cursor:pointer;transition:transform .2s cubic-bezier(.16,1,.3,1),background .2s}.ds-danger:hover{filter:brightness(.96)}.ds-danger:active{transform:scale(.96)}.ds-danger:focus-visible{outline:3px solid var(--accent,#1759e8);outline-offset:5px}"
+    },
+    {
+      "name": "Input",
+      "kind": "input",
+      "refersTo": "input",
+      "description": "Labelled field with a visible focus state.",
+      "html": "<label class=\"ds-label\">Персональная ссылка<input class=\"ds-input\" placeholder=\"Вставьте персональную ссылку\"/></label>",
+      "css": ".ds-label{display:grid;gap:9px;font:13px \"Onest Variable\",sans-serif;color:var(--text,#18202e)}.ds-input{padding:14px 16px;border:1px solid var(--line,#dce0e8);border-radius:12px;background:var(--bg,#f5f6f8);color:var(--text,#18202e);font:15px \"Onest Variable\",sans-serif;caret-color:var(--accent,#1759e8)}.ds-input::placeholder{color:var(--muted,#626b7c)}.ds-input:hover{border-color:#a7b4ca}.ds-input:focus-visible{outline:none;border-color:var(--accent,#1759e8);box-shadow:0 0 0 3px #1759e81a}"
+    },
+    {
+      "name": "Selected administration navigation",
+      "kind": "nav",
+      "refersTo": "navigation-active",
+      "description": "The existing compact management selection.",
+      "html": "<button class=\"ds-nav\">Обзор</button>",
+      "css": ".ds-nav{padding:14px 16px;background:#e0e9fc;color:#124cc4;border:0;border-radius:12px;font:14px \"Onest Variable\",sans-serif;cursor:pointer}.ds-nav:hover{background:#e5eaf3}.ds-nav:active{transform:scale(.98)}.ds-nav:focus-visible{outline:3px solid #1759e8;outline-offset:5px}"
+    },
+    {
+      "name": "Cabinet expiry notice",
+      "kind": "custom",
+      "description": "Inline warning within the personal cabinet; date and conditions come from real data.",
+      "html": "<section class=\"ds-expiry\" role=\"status\"><h3>Срок доступа скоро закончится</h3><p>Точная дата и оставшийся срок отображаются здесь.</p><a href=\"#renewal\">Как продлить</a></section>",
+      "css": ".ds-expiry{padding:22px 24px;border-radius:12px;background:#fff0d8;color:#765010;font:12px/1.75 \"Onest Variable\",sans-serif}.ds-expiry h3{font-size:15px;line-height:1.4;margin:0}.ds-expiry p{margin:7px 0}.ds-expiry a{color:inherit;text-underline-offset:4px}.ds-expiry a:hover{text-decoration-thickness:2px}.ds-expiry a:focus-visible{outline:3px solid #1759e8;outline-offset:5px}.ds-expiry a:active{opacity:.8}"
+    },
+    {
+      "name": "Password entry",
+      "kind": "input",
+      "description": "Masked password field with an accessible visibility control.",
+      "html": "<label class=\"ds-password-label\">Пароль<span class=\"ds-password\"><input type=\"password\" autocomplete=\"current-password\" placeholder=\"Ваш пароль\"/><button type=\"button\" aria-label=\"Показать пароль\"><svg width=\"18\" height=\"18\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\"><path d=\"M2 12s3-7 10-7 10 7 10 7-3 7-10 7S2 12 2 12Z\"/><circle cx=\"12\" cy=\"12\" r=\"3\"/></svg></button></span></label>",
+      "css": ".ds-password-label{display:grid;gap:9px;font:13px \"Onest Variable\",sans-serif;color:var(--text,#18202e)}.ds-password{position:relative;display:block}.ds-password input{box-sizing:border-box;width:100%;padding:14px 58px 14px 16px;border:1px solid var(--line,#dce0e8);border-radius:12px;background:var(--bg,#f5f6f8);color:var(--text,#18202e);font:14px \"Onest Variable\",sans-serif}.ds-password input::placeholder{color:var(--muted,#626b7c)}.ds-password button{position:absolute;inset:5px 5px 5px auto;display:grid;place-items:center;min-width:40px;border:0;border-radius:50%;background:transparent;color:var(--muted,#626b7c);cursor:pointer}.ds-password button:hover{background:#e2eafa;color:var(--accent,#1759e8)}.ds-password button:active{scale:.96}.ds-password input:focus-visible,.ds-password button:focus-visible{outline:3px solid var(--accent,#1759e8);outline-offset:4px}"
+    }
+  ],
+  "narrative": {
+    "northStar": "Живая линия / Living line",
+    "overview": "A mineral white personal VPN interface with a cobalt route signature and self-hosted Cyrillic Onest. Public setup is expressive; administration remains calm and functional.",
+    "keyCharacteristics": [
+      "One dimensional looping route",
+      "Light surfaces and cobalt actions",
+      "Working subscription form in the hero",
+      "Motion respects reduced-motion preferences"
+    ],
+    "rules": [
+      {
+        "name": "Useful color",
+        "body": "Accent identifies action, focus, selection or measured traffic.",
+        "section": "colors"
+      },
+      {
+        "name": "One authored motion",
+        "body": "The route owns expressive movement; routine tasks remain quick.",
+        "section": "components"
+      }
+    ],
+    "dos": [
+      "Preserve real data and existing handlers.",
+      "Keep phone overflow local.",
+      "Provide labelled state and visible focus.",
+      "Keep cabinet warnings inline and truthful; personal links are access credentials.",
+      "Place self-service password changes in the inline Security section with current-password verification and clear session consequences."
+    ],
+    "donts": [
+      "Do not restore the superseded Navigator comp.",
+      "Do not invent ad-free or universal whitelist-bypass guarantees."
+    ]
+  }
+}
