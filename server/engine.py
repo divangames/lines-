@@ -77,7 +77,7 @@ def command(action, *arguments):
                             capture_output=True, text=True, timeout=8,
                             **({"creationflags": subprocess.CREATE_NO_WINDOW} if os.name == "nt" else {}))
     if result.returncode:
-        raise RuntimeError("VPN-ядро временно недоступно")
+        raise RuntimeError("Сервис подключения временно недоступен")
     return result.stdout
 
 
@@ -120,13 +120,13 @@ def sync(force=False):
             try:
                 response = command("adu", path)
                 if f"Added {len(additions)} user(s)" not in response:
-                    raise RuntimeError("Не удалось применить VPN-профили")
+                    raise RuntimeError("Не удалось применить профили подключения")
             finally:
                 Path(path).unlink(missing_ok=True)
             APPLIED.update({row["email"]: row["uuid"] for row in additions})
         LAST_ERROR = ""
     except Exception:
-        LAST_ERROR = "Не удалось связаться с VPN-ядром"
+        LAST_ERROR = "Не удалось связаться с сервисом подключения"
         raise
 
 

@@ -49,6 +49,7 @@ def db():
 
 
 def initialize():
+    from . import partners
     with db() as connection:
         connection.executescript("""
         PRAGMA journal_mode=WAL;
@@ -78,6 +79,7 @@ def initialize():
         CREATE INDEX IF NOT EXISTS events_date_idx ON events(created_at);
         """)
         columns = {row['name'] for row in connection.execute('PRAGMA table_info(clients)')}
+        partners.initialize(connection)
         if 'account_username' not in columns:
             connection.execute('ALTER TABLE clients ADD COLUMN account_username TEXT')
         if 'account_password_hash' not in columns:
@@ -96,11 +98,13 @@ def initialize():
             connection.execute('UPDATE client_sessions SET remembered=1 WHERE expires_at>?', (now() + 43200,))
         connection.execute('CREATE INDEX IF NOT EXISTS client_session_expiry_idx ON client_sessions(expires_at)')
         connection.execute('DELETE FROM client_sessions WHERE expires_at<=?', (now(),))
-        defaults = {"name": "Линия", "tagline": "VPN для своих", "support_url": "",
+        defaults = {"name": "Линия", "tagline": "Помощник для игры по сети", "support_url": "",
                     "admin_username": CONFIG.get("admin_username", "admin"),
                     "admin_password_hash": CONFIG["admin_password_hash"]}
         for key, value in defaults.items():
             connection.execute("INSERT OR IGNORE INTO settings VALUES (?,?)", (key, value))
+        connection.execute("UPDATE settings SET value=? WHERE key='tagline' AND value=?",
+                           (defaults["tagline"], "VPN для своих"))
         connection.execute("DELETE FROM sessions WHERE expires_at < ?", (now(),))
     if os.name != "nt":
         os.chmod(DB, 0o600)
@@ -111,8 +115,10 @@ def now():
 
 
 def settings(private=False):
+    from . import partners
     with db() as connection:
         values = dict(connection.execute("SELECT key,value FROM settings").fetchall())
+        values["offer_terms"] = partners.terms(connection).model_dump()
     if not private:
         values.pop("admin_password_hash", None)
         values.pop("admin_username", None)

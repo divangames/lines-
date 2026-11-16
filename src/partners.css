@@ -1,0 +1,10 @@
+.offer-fields{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,200px),1fr));gap:16px;margin:20px 0}
+.partner-panel{background:#fff;border:1px solid var(--line,#dce0e8);border-radius:18px;padding:clamp(22px,4vw,38px);margin:28px 0}
+.partner-panel h2{font-size:clamp(24px,3vw,34px);line-height:1.15;margin:0}
+.partner-panel p{max-width:62ch;color:#526078;margin:12px 0 22px}
+.partner-panel label{display:block;font-weight:550;margin-bottom:8px}
+.partner-panel .copy-field{max-width:620px}
+.partner-counts{display:flex;flex-wrap:wrap;gap:20px 48px;border-top:1px solid #dce0e8;padding-top:20px;margin:24px 0 0}
+.partner-counts dt{color:#526078;font-size:14px}.partner-counts dd{margin:3px 0 0;font-size:24px;font-variant-numeric:tabular-nums}
+.partner-invite{max-width:640px;margin:8vh auto}.partner-invite h1{font-size:clamp(28px,5vw,44px)}.partner-invite input{display:block;margin-bottom:18px;max-width:100%}.partner-invite .text-link{display:block;margin-top:16px}
+.partner-invite select,.partner-invite form input{width:100%;margin-bottom:18px}.partner-invite select{padding:12px;border:1px solid #ccd3df;border-radius:12px;background:white;font:inherit}.partner-request{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;padding:16px 0;border-top:1px solid #dce0e8}.partner-request p{margin:4px 0;color:#526078}

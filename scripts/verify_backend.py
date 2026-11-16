@@ -51,11 +51,12 @@ with TestClient(app,base_url='http://127.0.0.1:8088') as c:
     check(sub.status_code==200 and base64.b64decode(sub.text).decode().startswith('vless://'),'Standard VLESS subscription')
     check('total=1073741824' in sub.headers['subscription-userinfo'],'Subscription quota headers')
     happ=c.get('/sub/'+token,headers={'User-Agent':'Happ/4.7.2'})
+    check(happ.headers['exclude-routes']=='217.60.19.243/32','Happ sends the VPN endpoint outside its TUN adapter')
     happ_rules=json.loads(base64.b64decode(happ.headers['routing'].removeprefix('happ://routing/onadd/')))
-    check(happ_rules['DirectSites']==['domain:ru','domain:xn--p1ai'] and happ_rules['GlobalProxy']=='true','Happ imports Russian suffix bypass while other traffic stays proxied')
+    check(happ_rules['DirectSites']==['domain:ru','domain:xn--p1ai','full:linesonline.pro','full:www.linesonline.pro'] and '217.60.19.243/32' in happ_rules['DirectIp'] and happ_rules['GlobalProxy']=='true','Happ imports Russian suffix bypass while other traffic stays proxied')
     v2=c.get('/sub/'+token,headers={'User-Agent':'v2RayTun/2.0'})
     v2_rules=json.loads(base64.b64decode(v2.headers['routing']))
-    check(v2_rules['rules'][0]['outboundTag']=='direct' and v2_rules['rules'][0]['domain']==happ_rules['DirectSites'],'v2RayTun receives its native routing format')
+    check(v2_rules['rules'][0]['outboundTag']=='direct' and v2_rules['rules'][0]['domain']==happ_rules['DirectSites'] and v2_rules['rules'][1]['ip']==['217.60.19.243/32'] and v2_rules['rules'][1]['outboundTag']=='direct','v2RayTun receives its native routing format')
     check('routing' not in sub.headers,'Unrelated clients do not receive an incompatible routing payload')
     upstream=directory/'upstream.json'
     upstream.write_text(json.dumps({'outbound':{'protocol':'vless','tag':'youtube-vpn','settings':{
@@ -65,6 +66,10 @@ with TestClient(app,base_url='http://127.0.0.1:8088') as c:
     check(server_config['outbounds'][0]['tag']=='direct' and server_config['routing']['rules'][-1]['outboundTag']=='youtube-vpn','YouTube upstream preserves the original default egress')
     private_subscription=base64.b64decode(c.get('/sub/'+token).text).decode()
     check('11111111-2222-4333-8444-555555555555' not in private_subscription and '192.0.2.123' not in private_subscription and private_subscription==base64.b64decode(sub.text).decode(),'Third-party VPN credentials stay off client subscriptions')
+    upstream.write_text(json.dumps({'egress':'vps-ipv4'}))
+    direct_config=engine.xray_config(store.clients())
+    direct_video=next(o for o in direct_config['outbounds'] if o['tag']=='youtube-direct')
+    check(direct_video['protocol']=='freedom' and direct_video['settings']['targetStrategy']=='ForceIPv4' and direct_config['routing']['rules'][-1]['outboundTag']==direct_video['tag'],'YouTube direct mode uses VPS IPv4 for video domains')
     store.CONFIG.pop('youtube_upstream')
     shared='/connect/'+token
     for agent in ('Happ/4.0','v2raytun/2.0','v2rayNG/1.10','v2rayN/7.0','Dart/3.8 (dart:io)'):

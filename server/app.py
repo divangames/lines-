@@ -26,7 +26,7 @@ from pydantic import BaseModel, ConfigDict, Field, field_validator
 from starlette.websockets import WebSocketDisconnect
 from websockets.asyncio.client import connect as ws_connect
 
-from . import engine, store, routing, accounts
+from . import engine, store, routing, accounts, partners
 
 LOG = logging.getLogger("linea")
 CONNECTIONS = defaultdict(set)
@@ -136,7 +136,7 @@ async def headers_and_limits(request, call_next):
     response.headers["X-Frame-Options"] = "DENY"
     response.headers["Permissions-Policy"] = "camera=(), microphone=(), geolocation=()"
     if not store.DEVELOPMENT:
-        response.headers["Content-Security-Policy"] = "default-src 'self'; script-src 'self'; style-src 'self'; font-src 'self'; img-src 'self' data:; connect-src 'self'; object-src 'none'; base-uri 'self'; frame-ancestors 'none'; form-action 'self'"
+        response.headers["Content-Security-Policy"] = "default-src 'self'; script-src 'self'; style-src 'self'; font-src 'self'; img-src 'self' data:; connect-src 'self' https://speed.cloudflare.com; object-src 'none'; base-uri 'self'; frame-ancestors 'none'; form-action 'self'"
     if request.url.path.startswith(("/api", "/sub", "/connect", "/admin", "/account")):
         response.headers["Cache-Control"] = "no-store"
         response.headers["X-Robots-Tag"] = "noindex, nofollow"
@@ -163,6 +163,10 @@ class ClientInput(accounts.CredentialFields):
         if any(ord(char) < 32 and char not in "\n\t" for char in value):
             raise ValueError("Недопустимые символы")
         return value
+
+
+class NewClientInput(ClientInput):
+    referral_code: str | None = Field(default=None, min_length=16, max_length=16, pattern=r"^[a-fA-F0-9]{16}$")
 
 
 class SettingsInput(BaseModel):
@@ -261,6 +265,7 @@ def overview(_=Depends(admin)):
     today = datetime.now(ZoneInfo("Asia/Krasnoyarsk")).date()
     with store.db() as conn:
         days = {row["day"]: dict(row) for row in conn.execute("SELECT day,SUM(uploaded) AS uploaded,SUM(downloaded) AS downloaded FROM daily GROUP BY day ORDER BY day DESC LIMIT 30")}
+        invitations = partners.pending(conn)
         events = [dict(row) for row in conn.execute("SELECT events.*,clients.name AS client_name FROM events LEFT JOIN clients ON clients.id=events.client_id ORDER BY events.id DESC LIMIT 30")]
         all_time = conn.execute("SELECT COALESCE(SUM(uploaded+downloaded),0) FROM daily").fetchone()[0]
     history = []
@@ -272,7 +277,7 @@ def overview(_=Depends(admin)):
             "used_bytes": all_time,
             "today_bytes": sum(days.get(today.isoformat(), {}).get(field, 0) for field in ("uploaded", "downloaded")),
             "history": history, "events": events, "engine_error": engine.LAST_ERROR,
-            "last_poll": engine.LAST_POLL, "settings": store.settings()}
+            "last_poll": engine.LAST_POLL, "settings": store.settings(), "partner_requests": invitations}
 
 
 @app.get("/api/admin/clients")
@@ -281,7 +286,7 @@ def list_clients(_=Depends(admin)):
 
 
 @app.post("/api/admin/clients")
-def create_client(body: ClientInput, _=Depends(admin)):
+def create_client(body: NewClientInput, _=Depends(admin)):
     if not body.name.strip():
         raise HTTPException(422, "Укажите имя")
     with engine.LOCK:
@@ -293,6 +298,8 @@ def create_client(body: ClientInput, _=Depends(admin)):
                             VALUES (?,?,?,?,?,?,?,?,?,?,?)""",
                          (identifier, body.name.strip(), body.note, secrets.token_urlsafe(32), secrets.token_urlsafe(32), str(uuid.uuid4()),
                           identifier + "@linea", int(body.enabled), round(body.quota_gb * 1024**3), body.expires_at or None, store.now()))
+            if body.referral_code:
+                partners.invite(conn, identifier, body.referral_code)
             credentials = accounts.save_credentials(conn, identifier, body.account_username, body.account_password, force=True)
             store.event("created", identifier, connection=conn)
         try:
@@ -391,6 +398,62 @@ def update_settings(body: SettingsInput, _=Depends(admin)):
     return store.settings()
 
 
+@app.put("/api/admin/offers")
+def update_offers(body: partners.Terms, _=Depends(admin)):
+    if not body.router_help.strip():
+        raise HTTPException(422, "Укажите условия помощи с роутером")
+    with store.db() as conn:
+        conn.execute("INSERT OR REPLACE INTO settings VALUES ('offer_terms',?)", (body.model_dump_json(),))
+    return store.settings()
+
+
+INVITE_ATTEMPTS = deque(maxlen=200)
+
+
+@app.post("/api/invitations/{code}/join", status_code=202)
+def join_invitation(code: str, body: partners.JoinRequest, request: Request):
+    check_origin(request)
+    peer = request.client.host if request.client else "unknown"
+    ip = request.headers.get("x-real-ip",peer) if peer in ("127.0.0.1","::1") else peer
+    now = time.monotonic()
+    with FAILURE_LOCK:
+        while INVITE_ATTEMPTS and INVITE_ATTEMPTS[0][0] < now-600:
+            INVITE_ATTEMPTS.popleft()
+        if len(INVITE_ATTEMPTS)>=200 or sum(source==ip for _,source in INVITE_ATTEMPTS)>=10:
+            raise HTTPException(429, "Повторите попытку через 10 минут")
+        INVITE_ATTEMPTS.append((now,ip))
+    partners.submit(code,body)
+    return {"ok": True}
+
+
+@app.post("/api/admin/invitations/{request_id}/payment")
+def pay_invitation(request_id: str, _=Depends(admin)):
+    with engine.LOCK:
+        partners.activate(request_id)
+        try:
+            engine.sync()
+        except Exception:
+            LOG.warning("Invitation activated; engine reconciliation will retry")
+    return {"ok": True}
+
+
+@app.get("/api/admin/clients/{client_id}/referral")
+def get_referral(client_id: str, _=Depends(admin)):
+    row_or_404(client_id)
+    return partners.referral(client_id)
+
+
+@app.post("/api/admin/clients/{client_id}/referral/payment")
+def referral_payment(client_id: str, _=Depends(admin)):
+    with engine.LOCK:
+        partners.confirm_payment(client_id)
+        try:
+            engine.sync()
+        except Exception:
+            LOG.warning("Referral saved; engine reconciliation will retry")
+    return partners.referral(client_id)
+
+
 @app.post("/api/admin/password")
 def change_password(body: ChangePassword, response: Response, _=Depends(admin)):
     if not store.password_matches(body.current_password, store.settings(private=True)["admin_password_hash"]):
@@ -411,6 +474,7 @@ def access(token: str):
 
 def access_view(row):
     result = client_view(row)
+    result["partner"] = partners.summary(row["id"])
     result["settings"] = store.settings()
     result["subscription_url"] = store.BASE_URL + "/sub/" + row["token"]
     result["page_url"] = store.BASE_URL + "/connect/" + row["token"]

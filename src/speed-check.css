@@ -1,0 +1,123 @@
+.speed-check {
+  container-type: inline-size;
+  margin-block: 34px;
+  color: var(--text, #18202e);
+}
+.speed-check .speed-heading {
+  margin: 0 0 18px;
+  padding: 0;
+}
+.speed-check .speed-heading h2 {
+  margin: 0;
+  font-size: clamp(21px, 2.5vw, 25px);
+  font-weight: 550;
+  line-height: 1.2;
+  letter-spacing: -.03em;
+}
+.speed-check .speed-heading p {
+  margin: 7px 0 0;
+  color: var(--muted, #626b7c);
+  font-size: 13px;
+  line-height: 1.55;
+}
+.speed-check .speed-panel {
+  display: grid;
+  grid-template-columns: minmax(230px, .9fr) minmax(0, 1.1fr);
+  align-items: stretch;
+  overflow: hidden;
+  border: 1px solid var(--line, #dce0e8);
+  border-radius: 16px;
+  background: #fff;
+}
+.speed-check .speed-dial {
+  display: grid;
+  place-items: center;
+  min-width: 0;
+  padding: 10px 12px 7px;
+  background: #102a59;
+}
+.speed-dial svg { display: block; width: min(100%, 300px); height: auto; }
+.speed-dial svg text { text-anchor: middle; font-family: inherit; font-variant-numeric: tabular-nums; }
+.speed-track, .speed-fill { fill: none; stroke-width: 7; stroke-linecap: round; }
+.speed-track { stroke: #365583; }
+.speed-fill { stroke: #82b4ff; }
+.speed-tick { stroke: #6781a8; stroke-width: 1; }
+.speed-tick.major { stroke: #c1ceed; stroke-width: 1.5; }
+.speed-tick-label { fill: #cfddf2; font-size: 11px; font-weight: 500; }
+.speed-needle { fill: white; transition: transform 160ms ease-out; }
+.speed-hub { fill: #d2e3ff; }
+.speed-hub-dot { fill: #183766; }
+.speed-digits { fill: #fff; font-size: 35px; font-weight: 550; letter-spacing: -.03em; }
+.speed-unit { fill: #ccdbef; font-size: 12px; }
+.speed-check .speed-details {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 21px;
+  min-width: 0;
+  padding: 20px clamp(22px, 4cqw, 42px);
+}
+.speed-check .speed-results { margin: 0; }
+.speed-results > div {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 3px 14px;
+  padding-block: 10px;
+  border-bottom: 1px solid var(--line, #dce0e8);
+}
+.speed-results > div:first-child { padding-top: 0; }
+.speed-results dt {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  color: #495972;
+  font-size: 13px;
+}
+.speed-results dt svg { color: #45658e; }
+.speed-results .is-measuring dt, .speed-results .is-measuring dt svg { color: #1759e8; }
+.speed-results dd {
+  margin: 0 0 0 auto;
+  font-size: 21px;
+  font-weight: 550;
+  line-height: 1.2;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+.speed-results dd span { color: #57677b; font-size: 11px; font-weight: 450; }
+.speed-controls { display: flex; flex-wrap: wrap; align-items: center; gap: 9px 14px; }
+.speed-controls button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  min-height: 44px;
+  padding: 10px 18px;
+  border: 1px solid transparent;
+  border-radius: 24px;
+  font: inherit;
+  font-size: 13px;
+  font-weight: 550;
+  line-height: 1.3;
+  cursor: pointer;
+}
+.speed-controls .speed-start { color: #fff; background: #1759e8; }
+.speed-controls .speed-stop { color: #253e62; background: #e8edf6; }
+.speed-controls button:focus-visible { outline: 3px solid #1759e8; outline-offset: 3px; }
+.speed-status { color: #57677b; font-size: 12px; line-height: 1.45; }
+@media (hover: hover) {
+  .speed-controls .speed-start:hover { background: #0646ce; }
+  .speed-controls .speed-stop:hover { background: #dbe4f1; }
+}
+@container (max-width: 570px) {
+  .speed-check .speed-panel { grid-template-columns: minmax(0, 1fr); }
+  .speed-check .speed-dial { padding: 3px 12px 0; }
+  .speed-dial svg { width: min(100%, 264px); }
+  .speed-check .speed-details { gap: 18px; padding: 20px; }
+  .speed-controls { flex-direction: column; }
+  .speed-controls button { width: 100%; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .speed-needle { transition: none; }
+}

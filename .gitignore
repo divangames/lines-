@@ -29,3 +29,8 @@ Thumbs.db
 .impeccable/surfaces/*
 !.impeccable/surfaces/*.json
 assets/
+!src/assets/
+src/assets/*
+!src/assets/scenarios/
+src/assets/scenarios/*
+!src/assets/scenarios/*.webp

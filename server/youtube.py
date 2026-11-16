@@ -18,10 +18,14 @@ DOMAINS = [
 
 def apply(config, private):
     """Apply the server-owned outbound without placing its credentials in client profiles."""
-    outbound = copy.deepcopy(private['outbound'])
-    if outbound.get('protocol') != 'vless':
-        raise ValueError('YouTube upstream must be a VLESS outbound')
-    outbound['tag'] = UPSTREAM_TAG
+    if private.get('egress') == 'vps-ipv4':
+        outbound = {'tag': 'youtube-direct', 'protocol': 'freedom',
+                    'settings': {'targetStrategy': 'ForceIPv4'}}
+    else:
+        outbound = copy.deepcopy(private['outbound'])
+        if outbound.get('protocol') != 'vless':
+            raise ValueError('YouTube upstream must be a VLESS outbound')
+        outbound['tag'] = UPSTREAM_TAG
     config['outbounds'].append(outbound)
     config['inbounds'].append({
         'tag': NAIVE_TAG, 'listen': '127.0.0.1', 'port': NAIVE_PORT, 'protocol': 'socks',
@@ -37,6 +41,6 @@ def apply(config, private):
         {'type': 'field', 'ruleTag': 'youtube-quic-to-tcp', 'domain': DOMAINS,
          'network': 'udp', 'port': '443', 'outboundTag': 'blocked'},
         {'type': 'field', 'ruleTag': 'youtube-upstream', 'domain': DOMAINS,
-         'outboundTag': UPSTREAM_TAG},
+         'outboundTag': outbound['tag']},
     ])
     return config
