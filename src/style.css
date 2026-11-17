@@ -327,3 +327,15 @@ html.lenis { scroll-behavior:auto; }
   .mobile-auth a{display:flex;align-items:center;justify-content:center;width:100%;min-height:48px;padding:12px 20px;border-radius:12px;background:var(--accent);color:#fff;font-size:15px;font-weight:500}
   .mobile-auth a:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
 }
+
+.telegram-contacts{display:grid;grid-template-columns:.9fr 1.1fr;gap:9%;padding:0 0 100px}
+.telegram-contacts-intro h2{font-size:clamp(32px,4vw,52px);font-weight:550;line-height:1.08;letter-spacing:-.035em;max-width:9em}
+.telegram-contacts-intro p{max-width:28em;margin-top:22px;color:var(--muted);line-height:1.65}
+.telegram-contact{display:flex;gap:20px;padding:28px 0;border-top:1px solid var(--line)}
+.telegram-contact>svg{flex-shrink:0;color:var(--accent);margin-top:3px}
+.telegram-contact strong{display:block;font-size:23px;font-weight:550;letter-spacing:-.02em}
+.telegram-contact span>span{display:block;margin-top:10px;color:var(--muted);font-size:15px;line-height:1.7;max-width:38em}
+.telegram-contact b{display:flex;align-items:center;gap:8px;margin-top:18px;color:var(--accent);font-size:14px;font-weight:550}
+.telegram-contact:hover b{text-decoration:underline;text-underline-offset:4px}
+.telegram-contact:focus-visible{outline:2px solid var(--accent);outline-offset:6px;border-radius:4px}
+@media(max-width:650px){.telegram-contacts{grid-template-columns:1fr;gap:30px;padding-bottom:60px}.telegram-contact{gap:15px;padding:24px 0}.telegram-contact strong{font-size:21px}}
