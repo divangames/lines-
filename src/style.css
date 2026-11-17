@@ -318,3 +318,14 @@ html.lenis { scroll-behavior:auto; }
 @media(prefers-reduced-motion:reduce) {
   .scenario-stage.touch-track:not([data-dragging]) .scenario-art { transition: none; }
 }
+
+/* Keep account actions available without opening the mobile navigation. */
+.mobile-auth{display:none}
+@media(max-width:650px){
+  .site-header-inner{flex-wrap:wrap;gap:8px 16px}
+  .site-header-inner>.brand{margin-right:auto}
+  .mobile-auth{display:flex;order:3;flex-basis:100%;gap:12px}
+  .mobile-auth a{display:flex;align-items:center;justify-content:center;flex:1;min-height:44px;padding:10px 14px;border-radius:12px;background:var(--raised);color:var(--text);font-size:14px;font-weight:500}
+  .mobile-auth .mobile-register{background:var(--accent);color:#fff}
+  .mobile-auth a:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
+}
