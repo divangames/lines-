@@ -359,3 +359,11 @@ html.lenis { scroll-behavior:auto; }
 
 .document-links a,.account-footer>a{display:inline-flex;align-items:center;gap:8px}
 .document-links a>svg,.account-footer>a>svg,.account-footer>button>svg{flex-shrink:0;color:currentColor}
+
+.footer-contacts{display:flex;flex-wrap:wrap;gap:12px 28px;padding:18px 0}
+.footer-contacts a{display:inline-flex;align-items:center;gap:9px;min-height:44px;font-size:15px;color:inherit}
+.footer-contacts svg{flex-shrink:0}
+.footer-contacts a:hover{text-decoration:underline;text-underline-offset:4px}
+.footer-contacts a:focus-visible{outline:2px solid currentColor;outline-offset:5px;border-radius:4px}
+.account-footer>.footer-contacts{flex-basis:100%;padding:0}
+@media(max-width:650px){.footer-contacts{gap:4px 24px}}
