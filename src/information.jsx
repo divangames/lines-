@@ -1,4 +1,4 @@
-import {UserRound,BookOpen,Globe2,ShieldCheck,Play,ChevronDown} from 'lucide-react';
+import {Cookie,FileText,UserRound,BookOpen,Globe2,ShieldCheck,Play,ChevronDown} from 'lucide-react';
 import React, {useEffect, useRef} from 'react';
 
 export const documents = {
@@ -23,7 +23,7 @@ export const documents = {
 };
 
 export function DocumentLinks() {
-  return <nav className="document-links" aria-label="Правовая информация">{Object.entries(documents).map(([url,doc])=><a key={url} href={url}>{doc.title}</a>)}</nav>;
+  return <nav className="document-links" aria-label="Правовая информация">{Object.entries(documents).map(([url,doc])=><a key={url} href={url}>{url==='/privacy'?<ShieldCheck size={17} aria-hidden="true"/>:url==='/cookies'?<Cookie size={17} aria-hidden="true"/>:<FileText size={17} aria-hidden="true"/>}{doc.title}</a>)}</nav>;
 }
 export function DocumentPage({doc,settings}) {
   return <article className="legal-page"><a href="/">← На главную</a><h1>{doc.title}</h1><p>Редакция от 16 ноября 2026 года</p>{doc.sections.map(([heading,body])=><section key={heading}><h2>{heading}</h2><p>{body}</p></section>)}<h2>Связь с владельцем</h2>{settings.support_url?<a href={settings.support_url} rel="noreferrer">Написать в поддержку</a>:<p>Используйте канал связи, через который вам выдали доступ.</p>}</article>;

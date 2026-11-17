@@ -341,8 +341,8 @@ html.lenis { scroll-behavior:auto; }
 @media(max-width:650px){.telegram-contacts{grid-template-columns:1fr;gap:30px;padding-bottom:60px}.telegram-contact{gap:15px;padding:24px 0}.telegram-contact strong{font-size:21px}}
 
 /* Telegram links stay accessible when the navigation needs more room. */
-@media(min-width:1151px){.site-header nav{gap:20px;white-space:nowrap}}
-@media(min-width:651px) and (max-width:1150px){
+@media(min-width:1251px){.site-header nav{gap:20px;white-space:nowrap}}
+@media(min-width:651px) and (max-width:1250px){
   .menu-toggle{display:inline-flex}
   .site-header nav{position:absolute;top:calc(100% - 1px);left:28px;right:28px;display:none;flex-direction:column;align-items:stretch;gap:3px;padding:15px;background:var(--surface);border-radius:16px;box-shadow:0 18px 35px #1a2d5026}
   .site-header nav.is-open{display:flex}
@@ -350,7 +350,12 @@ html.lenis { scroll-behavior:auto; }
   .site-header nav>a::after{display:none}
   .site-header .nav-login{margin:4px 0 0;justify-content:space-between;background:#eaf0fb}
 }
-@media(max-width:1150px){.site-header nav{max-height:calc(100dvh - 110px);overflow-y:auto;overscroll-behavior:contain}}
+@media(max-width:1250px){.site-header nav{max-height:calc(100dvh - 110px);overflow-y:auto;overscroll-behavior:contain}}
 
-.site-header .nav-contact{display:flex;align-items:center;gap:8px}
-.site-header .nav-contact>svg{flex-shrink:0;color:var(--accent)}
+.site-header nav>a,.site-header nav>.nav-login{display:flex;align-items:center;justify-content:flex-start;gap:8px}
+.site-header nav>a>svg,.site-header nav>.nav-login>svg{flex-shrink:0;color:var(--accent)}
+.mobile-auth a{gap:8px}
+.mobile-auth a>svg{flex-shrink:0}
+
+.document-links a,.account-footer>a{display:inline-flex;align-items:center;gap:8px}
+.document-links a>svg,.account-footer>a>svg,.account-footer>button>svg{flex-shrink:0;color:currentColor}
