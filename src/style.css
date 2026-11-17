@@ -351,3 +351,6 @@ html.lenis { scroll-behavior:auto; }
   .site-header .nav-login{margin:4px 0 0;justify-content:space-between;background:#eaf0fb}
 }
 @media(max-width:1150px){.site-header nav{max-height:calc(100dvh - 110px);overflow-y:auto;overscroll-behavior:contain}}
+
+.site-header .nav-contact{display:flex;align-items:center;gap:8px}
+.site-header .nav-contact>svg{flex-shrink:0;color:var(--accent)}
