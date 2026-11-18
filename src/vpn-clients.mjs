@@ -28,3 +28,18 @@ const otherClients = [
 export function clientsFor(platform) {
   return platform === 'ios' ? iosClients : otherClients;
 }
+
+const singBoxClients = {
+  ios: {name: 'sing-box MT', download: 'https://sing-box.sagernet.org/clients/apple/'},
+  macos: {name: 'sing-box для macOS', download: 'https://sing-box.sagernet.org/clients/apple/#download-macos-standalone-version'},
+  android: {name: 'sing-box для Android', download: 'https://sing-box.sagernet.org/clients/android/#download'},
+  windows: {name: 'sing-box для Windows', download: 'https://sing-box.sagernet.org/clients/desktop/#download'},
+};
+
+export function singBoxClientFor(platform) {
+  return {label: platform === 'ios' ? 'sing-box MT' : 'sing-box', ...singBoxClients[platform]};
+}
+
+export function singBoxImportLink(url, profile) {
+  return 'sing-box://import-remote-profile?url=' + encodeURIComponent(url) + '#' + encodeURIComponent('Линия · ' + profile);
+}

@@ -489,6 +489,9 @@ def access_view(row):
     result["page_url"] = store.BASE_URL + "/connect/" + row["token"]
     if store.status(row) == "active":
         result["uri"] = engine.uri(row)
+        result["sing_box_url"] = result["subscription_url"] + "/sing-box"
+        if owner_naive_profile(row["id"]) is not None:
+            result["sing_box_naive_url"] = result["sing_box_url"] + "/naive"
     return result
 
 
@@ -509,27 +512,44 @@ def access_qr(token: str):
     return Response(output.getvalue(), media_type="image/svg+xml", headers={"Cache-Control": "no-store"})
 
 
-def subscription_response(token: str, request: Request):
+def active_subscription(token):
     row = row_or_404(token=token)
     if store.status(row) != "active":
         raise HTTPException(403, "Доступ приостановлен, закончился срок или трафик")
+    return row
+
+
+def record_subscription_fetch(row):
     with store.db() as conn:
         conn.execute("UPDATE clients SET subscription_fetches=subscription_fetches+1,last_sync_at=? WHERE id=?", (store.now(), row["id"]))
-    title = "base64:" + base64.b64encode(engine.profile_name(row).encode()).decode()
+
+
+def subscription_response(token: str, request: Request):
+    row = active_subscription(token)
+    uri = engine.uri(row)
+    agent = request.headers.get("user-agent", "")
+    name = engine.profile_name(row)
+    profile = routing.happ_xray_profile(uri, name) if "happ" in agent.lower() else None
+    record_subscription_fetch(row)
+    title = "base64:" + base64.b64encode(name.encode()).decode()
     headers = {"profile-title": title, "profile-update-interval": "1",
                "subscription-userinfo": f"upload={row['uploaded']}; download={row['downloaded']}; total={row['quota_bytes']}; expire={row['expires_at'] or 0}",
                "profile-web-page-url": store.BASE_URL + "/connect/" + row["token"],
                "Content-Disposition": 'attachment; filename="linea-subscription.txt"'}
     support = store.settings()["support_url"]
-    headers.update(routing.subscription_headers(request.headers.get("user-agent", "")))
     if support:
         headers["support-url"] = support
-    return Response(base64.b64encode((engine.uri(row) + "\n").encode()).decode(), media_type="text/plain", headers=headers)
+    if profile is not None:
+        headers.update({"Cache-Control": "no-store", "exclude-routes": routing.VPN_ENDPOINT,
+                        "Content-Disposition": 'attachment; filename="linea-happ-xray.json"'})
+        return JSONResponse([profile], headers=headers)
+    headers.update(routing.subscription_headers(agent))
+    return Response(base64.b64encode((uri + "\n").encode()).decode(), media_type="text/plain", headers=headers)
 
 
 def browser_document(request: Request):
     agent = request.headers.get("user-agent", "")
-    vpn_client = re.search(r"happ|v2ray|v2box|hiddify|shadowrocket|streisand|sing-box|clash|mihomo|nekobox", agent, re.I)
+    vpn_client = re.search(r"happ|v2ray|incy|v2box|hiddify|shadowrocket|streisand|sing-box|clash|mihomo|nekobox", agent, re.I)
     return not vpn_client and (
         request.headers.get("sec-fetch-dest", "").lower() in ("document", "iframe")
         or "text/html" in request.headers.get("accept", "").lower()
@@ -541,6 +561,37 @@ def subscription(token: str, request: Request):
     response = RedirectResponse("/connect/" + token, status_code=307) if browser_document(request) else subscription_response(token, request)
     response.headers["Vary"] = "Accept, User-Agent, Sec-Fetch-Dest"
     return response
+
+
+def owner_naive_profile(client_id):
+    try:
+        declared = json.loads((store.STATE / "sing-box-naive.json").read_text(encoding="utf-8"))
+    except FileNotFoundError:
+        return None
+    except (OSError, ValueError):
+        LOG.error("Cannot read the owner sing-box NaiveProxy profile")
+        return None
+    if isinstance(declared, dict) and declared.get("client_id") == client_id:
+        profile = declared.get("profile")
+        if isinstance(profile, dict):
+            return profile
+    return None
+
+
+@app.api_route("/sub/{token}/sing-box", methods=["GET", "HEAD"])
+@app.api_route("/sub/{token}/sing-box/naive", methods=["GET", "HEAD"])
+def sing_box_subscription(token: str, request: Request):
+    row = active_subscription(token)
+    if request.url.path.endswith("/naive"):
+        profile = owner_naive_profile(row["id"])
+        if profile is None:
+            raise HTTPException(404, "Профиль не найден")
+        profile = routing.apply_singbox_routing(profile)
+    else:
+        profile = routing.singbox_vless_profile(engine.uri(row))
+    if request.method == "GET":
+        record_subscription_fetch(row)
+    return JSONResponse(profile, headers={"Cache-Control": "no-store"})
 
 
 @app.api_route("/connect/{token}", methods=["GET", "HEAD"])

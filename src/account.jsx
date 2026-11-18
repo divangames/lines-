@@ -83,7 +83,7 @@ export function UserAccount({token,settings,api,Shell,Button,Status,PlatformGuid
       {session?<SupportChat api={api} csrf={access.csrf||session.csrf}/>:<a className="button secondary" href="/account">Войти и написать в техподдержку</a>}
       <PartnerPanel partner={access.partner} terms={currentSettings.offer_terms} copy={copy}/><SpeedCheck/>
       {session&&<AccountPassword api={api} csrf={access.csrf||session.csrf} Button={Button} onSessionExpired={onSessionExpired} onChanged={result=>{setAccess(result);onSessionUpdate?.(result);}}/>}
-      <div className="account-device-guide"><PlatformGuide subscriptionUrl={access.subscription_url} active={state.status==='active'}/></div>
+      <div className="account-device-guide"><PlatformGuide subscriptionUrl={access.subscription_url} singBoxUrl={access.sing_box_url} singBoxNaiveUrl={access.sing_box_naive_url} active={state.status==='active'}/></div>
       <section className="account-renewal" id="renewal"><div><h2>Нужно продлить доступ?</h2><p>Срок и лимит меняет владелец сервиса. Напишите ему и укажите имя «{access.name}». После продления ваша ссылка и настройки в приложении сохранятся.</p>{!support&&<p className="renewal-no-contact">Свяжитесь с тем, кто отправил вам персональную ссылку. Контакт для связи на сайте пока не указан.</p>}</div>{support&&<a className="button primary" href={support} target="_blank" rel="noreferrer">Связаться с владельцем<ArrowUpRight size={17}/></a>}</section>
       <p className="account-updated">{updated?'Данные обновлены в '+new Intl.DateTimeFormat('ru-RU',{hour:'2-digit',minute:'2-digit',timeZone:'Asia/Krasnoyarsk'}).format(new Date(updated*1000)):'Загружаем данные'} · Автообновление каждые 15 секунд · Красноярск, UTC+7</p>
     </>}

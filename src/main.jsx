@@ -1,5 +1,5 @@
 import {TelegramContacts} from './telegram-contacts';
-import {clientsFor, inferredPlatform} from './vpn-clients.mjs';
+import {clientsFor, inferredPlatform, singBoxClientFor, singBoxImportLink} from './vpn-clients.mjs';
 import {TrafficChart} from './traffic-chart';
 import {forgetScreen,usePagePosition,useReloadValue} from './reload-position';
 import {SupportAdmin} from './support';
@@ -42,26 +42,44 @@ function Brand({name='Линия'}){return <a className="brand" href="/" aria-la
 function RouteGraphic(){return <ConnectionPath/>}
 
 const platforms=[['ios','iPhone',Smartphone],['android','Android',Smartphone],['windows','Windows',Monitor],['macos','macOS',Monitor]];
-function PlatformGuide({subscriptionUrl,active=true}){
+function PlatformGuide({subscriptionUrl, singBoxUrl, singBoxNaiveUrl, active=true}){
  const [platform,setPlatform]=useReloadValue('platform',inferredPlatform);const [choice,setChoice]=useReloadValue('vpnAppChoice',0);const show=useContext(ToastContext);const tabs=useRef([]);
  const selected=platforms.find(x=>x[0]===platform),Icon=selected[2];
- const clients=clientsFor(platform);
- const client=clients[choice];
+ const singBox=singBoxClientFor(platform);
+ const clients=[...clientsFor(platform), singBox];
+ const client=clients[choice]||clients[0];
  const ios=platform==='ios';
- async function copy(){if(!subscriptionUrl){document.getElementById('personal-link')?.focus();show('Сначала откройте персональную ссылку');return;}try{await navigator.clipboard.writeText(subscriptionUrl);show('Ссылка подписки скопирована');}catch{show('Не удалось скопировать. Выделите ссылку вручную',true);}}
+ const personalLink=<a className="text-link" href="#connection">У меня есть ссылка <ArrowRight size={16}/></a>;
+ async function copy(url){try{await navigator.clipboard.writeText(url);show('Ссылка скопирована');}catch{show('Не удалось скопировать ссылку',true);}}
  return <section className="device-section" id="devices"><div className="device-heading" data-reveal><h2>На любом<br/> устройстве.</h2><p>Телефон, ноутбук, компьютер.<br/> Ваша ссылка всегда с вами.</p></div><div className="platform-tabs" data-reveal role="tablist" aria-label="Ваше устройство">{platforms.map(([id,label,ItemIcon],index)=><button key={id} ref={el=>tabs.current[index]=el} role="tab" aria-selected={platform===id} aria-controls="platform-guide" id={'tab-'+id} tabIndex={platform===id?0:-1} className={platform===id?'selected':''} onClick={()=>setPlatform(id)} onKeyDown={e=>{if(['ArrowRight','ArrowLeft','Home','End'].includes(e.key)){e.preventDefault();const next=e.key==='Home'?0:e.key==='End'?3:(index+(e.key==='ArrowRight'?1:3))%4;setPlatform(platforms[next][0]);tabs.current[next]?.focus();}}}><ItemIcon size={20}/>{label}</button>)}</div><div className="platform-guide" data-reveal id="platform-guide" role="tabpanel" aria-labelledby={'tab-'+platform}><div className="platform-emblem" aria-hidden="true"><div className="device-visual"><Icon size={112}/><span className="device-link"><Link2 size={28}/></span></div><span>{selected[1]}</span><span className="device-visual-caption">Одна персональная ссылка</span></div><div className="guide-content" key={platform+client.name}>
-   <h3>Добавьте ссылку в {clients[0].name} или {clients[1].name}</h3>
+   <h3>Добавьте персональную ссылку</h3>
    <div className="client-tabs" data-choice={choice} aria-label="Приложение">
-     {clients.map((option,index)=><button key={option.name} aria-pressed={client===option} className={client===option?'chosen':''} onClick={()=>setChoice(index)}>{option.name}</button>)}
+     {clients.map((option,index)=><button key={option.name} aria-pressed={client===option} className={client===option?'chosen':''} onClick={()=>setChoice(index)}>{option.label||option.name}</button>)}
    </div>
-   <ol className="setup-list">
+   {client===singBox?<><ol className="setup-list">
+     <li><a href={singBox.download} target="_blank" rel="noreferrer">Установите {singBox.name} <ArrowUpRight size={15}/></a></li>
+     {!subscriptionUrl&&<li>Откройте свой личный кабинет по персональной ссылке и выберите sing-box в разделе «Устройства».</li>}
+     <li>Нажмите «Добавить VLESS». Для ручного импорта скопируйте ссылку и вставьте её в новый удалённый профиль (Remote).</li>
+     <li>Выберите профиль «Линия» и включите подключение.{ios&&' При первом запуске разрешите добавить конфигурацию VPN.'}</li>
+   </ol>
+   <p className="fine-note">Соединения с доменами Госуслуг, Maxim и других сервисов из списка идут напрямую. Остальной интернет-трафик идёт через VPS.</p>
+   {active&&singBoxUrl&&<div className="guide-actions">
+     <a className="button primary" href={singBoxImportLink(singBoxUrl,'VLESS')}><ExternalLink size={17}/>Добавить VLESS</a>
+     <Button variant="secondary" icon={Copy} onClick={()=>copy(singBoxUrl)}>Скопировать VLESS</Button>
+   </div>}
+   {active&&singBoxNaiveUrl&&<div className="guide-actions">
+     <a className="button secondary" href={singBoxImportLink(singBoxNaiveUrl,'NaiveProxy')}><ExternalLink size={17}/>Добавить NaiveProxy</a>
+     <Button variant="secondary" icon={Copy} onClick={()=>copy(singBoxNaiveUrl)}>Скопировать NaiveProxy</Button>
+   </div>}
+   {active&&singBoxNaiveUrl&&platform==='windows'&&<p className="fine-note">Для NaiveProxy на Windows установите 64-разрядную сборку sing-box.</p>}
+   {!subscriptionUrl&&<div className="guide-actions">{personalLink}</div>}</>:<><ol className="setup-list">
      <li><a href={client.download} target="_blank" rel="noreferrer">Установите {client.name} {ios?'из App Store':'с официального сайта'} <ArrowUpRight size={15}/></a></li>
      {!subscriptionUrl&&<li>Откройте персональную ссылку от владельца сервиса.</li>}
      <li>{ios?<>{subscriptionUrl&&active&&<>Нажмите «Добавить в {client.name}» или скопируйте ссылку подписки для ручного импорта. </>}{!subscriptionUrl&&'Скопируйте ссылку подписки в кабинете. '}{client.manual}</>:'Добавьте ссылку в приложение как подписку.'}</li>
      <li>Выберите сервер и включите подключение.{ios&&' При первом подключении разрешите добавить конфигурацию VPN.'}</li>
    </ol>
-   <div className="guide-actions">{subscriptionUrl&&active?<a className="button primary" href={client.importLink(subscriptionUrl)}><ExternalLink size={17}/>Добавить в {client.name}</a>:!subscriptionUrl&&<a className="text-link" href="#connection">У меня есть ссылка <ArrowRight size={16}/></a>}{subscriptionUrl&&active&&<Button variant="secondary" icon={Copy} onClick={copy}>Скопировать</Button>}</div>
-   {subscriptionUrl&&!ios&&<p className="fine-note">В v2rayN и v2rayNG добавьте URL как подписку. Если кнопка не открывает приложение, используйте копирование.</p>}</div></div></section>
+   <div className="guide-actions">{subscriptionUrl&&active?<a className="button primary" href={client.importLink(subscriptionUrl)}><ExternalLink size={17}/>Добавить в {client.name}</a>:!subscriptionUrl&&personalLink}{subscriptionUrl&&active&&<Button variant="secondary" icon={Copy} onClick={()=>copy(subscriptionUrl)}>Скопировать</Button>}</div>
+   {subscriptionUrl&&!ios&&<p className="fine-note">В v2rayN и v2rayNG добавьте URL как подписку. Если кнопка не открывает приложение, используйте копирование.</p>}</>}</div></div></section>
 }
 const faqs=[['Где взять персональную ссылку?','Доступ выдаёт владелец сервиса. Он отправит вам ссылку на страницу подключения: по ней можно добавить подписку в приложение.'],['Можно подключить несколько устройств?','Да. Откройте свою ссылку на каждом устройстве и добавьте подписку. Срок действия и лимит трафика общие для этого доступа.'],['Почему ссылка перестала работать?','Возможно, закончился срок или трафик, либо владелец приостановил доступ. Откройте свою страницу подключения: на ней указан текущий статус.'],['Что проверить, если игра не находит отряд?','Убедитесь, что подключение активно, и попросите друга отправить приглашение ещё раз. Если проблема сохраняется, проверьте статус игровых серверов и настройки NAT на роутере.'],['Убирает ли подключение рекламу на YouTube?','Для YouTube настроен отдельный маршрут, а сетевой фильтр блокирует известные рекламные и трекинговые домены. Полное отсутствие рекламы внутри роликов не гарантируется.'],['Будут ли обновляться рекомендации в TikTok?','Подключитесь к Линии и пользуйтесь TikTok без танцев с бубном: лента обновляется, а в рекомендациях появляются свежие видео.'],['Что видит владелец сервиса?','Объём переданного трафика, время последней активности, открытие страницы и обновление подписки. Список посещённых сайтов в этой панели не собирается.']];
 function FAQ(){const [opened,setOpened]=useState(0);return <section className="faq-section" id="questions"><div className="faq-heading" data-reveal><h2>На одной<br/>волне.</h2><p>Ответы на частые вопросы.</p></div><div className="faq-layout"><div className="faq-questions">{faqs.map(([question,answer],i)=><div key={question} className="faq-item" data-reveal><button id={'question-'+i} aria-expanded={opened===i} aria-controls={'answer-'+i} className={opened===i?'active':''} onClick={()=>setOpened(opened===i?-1:i)}>{question}<Plus size={18} className={opened===i?'rotated':''}/></button><div className="faq-answer" id={'answer-'+i} role="region" aria-labelledby={'question-'+i} hidden={opened!==i}><p>{answer}</p></div></div>)}</div></div></section>}
