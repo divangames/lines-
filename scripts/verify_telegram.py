@@ -16,7 +16,7 @@ root = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(root))
 with tempfile.TemporaryDirectory() as folder:
     config = Path(folder) / 'config.json'
-    config.write_text(json.dumps(dict(development=True, base_url='http://testserver', server_host='vpn.test',
+    config.write_text(json.dumps(dict(development=True, base_url='http://testserver', server_host='linesonline.pro',
         admin_password_hash='unused', secret='test-only', state=folder, telegram_token='mock',
         telegram_webhook_secret='example', telegram_username='test_bot')))
     os.environ['LINEA_CONFIG'] = str(config)
@@ -46,10 +46,17 @@ with tempfile.TemporaryDirectory() as folder:
         row, = store.clients()
         assert row['expires_at']-row['created_at']==48*3600 and row['quota_bytes']==5*1024**3
         assert post('/api/account/login', {'username':'+1 (202) 555-0123','password':password}).is_success
-        for agent in ('Happ','v2rayTun'):
-            sub = client.get('/sub/'+row['token'], headers={'user-agent':agent})
-            assert '🇵🇱 Польша' in base64.b64decode(sub.headers['profile-title'][7:]).decode()
-            assert '🇵🇱 Польша · Линия · Тест' in unquote(base64.b64decode(sub.content).decode())
+        sub_path = '/sub/'+row['token']
+        v2ray = client.get(sub_path, headers={'user-agent':'v2rayTun'})
+        assert '🇵🇱 Польша' in base64.b64decode(v2ray.headers['profile-title'][7:]).decode()
+        assert '🇵🇱 Польша · Линия · Тест' in unquote(base64.b64decode(v2ray.content).decode())
+        happ, = client.get(sub_path, headers={'user-agent':'Happ'}).json()
+        assert happ['remarks'] == '🇵🇱 Польша · Линия · Тест'
+        assert happ['outbounds'][0]['settings']['vnext'][0]['users'][0]['id'] == row['uuid']
+        account = client.get('/api/account/me').json()
+        assert account['sing_box_url'] == 'http://testserver'+sub_path+'/sing-box'
+        profile = client.get(sub_path+'/sing-box').json()
+        assert profile['outbounds'][0]['uuid'] == row['uuid']
         fields = {'auth_date':str(store.now()), 'user':'{"id":123}'}
         key=hmac.digest(b'WebAppData',b'mock','sha256')
         fields['hash']=hmac.digest(key,'\n'.join(f'{k}={v}' for k,v in sorted(fields.items())).encode(),'sha256').hex()
@@ -60,4 +67,4 @@ with tempfile.TemporaryDirectory() as folder:
             with store.db() as conn:
                 conn.execute(f'UPDATE clients SET uploaded=0,{field}=? WHERE id=?', (value, row['id']))
             assert client.get('/sub/'+row['token']).status_code==403
-print('Registration, contact verification, trial uniqueness, password, mini login, both client profiles and both limits passed.')
+print('Registration, contact verification, trial uniqueness, password, mini login, three client profiles and both limits passed.')

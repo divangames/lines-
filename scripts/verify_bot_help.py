@@ -45,6 +45,10 @@ with tempfile.TemporaryDirectory() as folder:
 
         message(1, '/support')
         message(1, '/support')
+        message(2, '/start')
+        welcome = api.call_args.kwargs
+        assert api.call_args.args == ('sendMessage',) and 'sing-box' in welcome['text']
+        assert welcome['reply_markup']['inline_keyboard'][0][0]['callback_data'] == 'help:devices'
         for device in bot_help.DEVICES:
             callback(device, device)
             callback(device, device)
@@ -52,6 +56,17 @@ with tempfile.TemporaryDirectory() as folder:
             rows = conn.execute("SELECT * FROM support_messages WHERE role='bot'").fetchall()
             assert len(rows) == 7
             assert all(len(row['body']) < 4096 for row in rows)
+            messages = [row['body'] for row in rows]
+            for device, (client, download) in bot_help.SING_BOX_CLIENTS.items():
+                label = bot_help.DEVICES[device][0]
+                instructions = next(text for text in messages if text.startswith(f'Подключение · {label}\n'))
+                assert all(expected in instructions for expected in (
+                    client, download, '/account#devices', 'Добавить VLESS',
+                    'Скопировать VLESS', 'Remote', 'Добавить NaiveProxy',
+                    'Скопировать NaiveProxy', 'напрямую', 'VPS'))
+                assert '/sub/' not in instructions
+            router = next(text for text in messages if text.startswith('Подключение на роутере\n'))
+            assert 'sing-box' in router and 'модель и прошивку' in router
             count = conn.execute('SELECT count(*) FROM telegram_help_events').fetchone()[0]
         callback('forged', 'admin', sender=456)
         with store.db() as conn:
@@ -90,5 +105,5 @@ with tempfile.TemporaryDirectory() as folder:
         assert sum('Последняя инструкция: Android.' in row['body'] for row in history) == 1
         assert TestClient(app).get('/api/admin/support/t-123').status_code == 401
 
-print('Passed: six guides, duplicate updates, callback isolation, unknown question handoff, '
+print('Passed: sing-box welcome, five sing-box guides and router guide, duplicate updates, callback isolation, unknown question handoff, '
       'ongoing admin conversation, admin API reply delivery, return to guides, and access control.')
