@@ -319,15 +319,12 @@ html.lenis { scroll-behavior:auto; }
   .scenario-stage.touch-track:not([data-dragging]) .scenario-art { transition: none; }
 }
 
-/* Keep the mobile join action within reach at the bottom of the screen. */
-.mobile-auth{display:none}
+/* Mobile join action follows the page and shares the primary button style. */
+.mobile-join{display:none}
 @media(max-width:650px){
-  .public-shell:has(>.mobile-auth){padding-bottom:calc(80px + env(safe-area-inset-bottom,0px))}
-  .mobile-auth{display:flex;position:fixed;z-index:29;left:0;right:0;bottom:0;padding:12px 20px calc(12px + env(safe-area-inset-bottom,0px));background:var(--bg);border-top:1px solid var(--line)}
-  .mobile-auth a{display:flex;align-items:center;justify-content:center;width:100%;min-height:48px;padding:12px 20px;border-radius:12px;background:var(--accent);color:#fff;font-size:15px;font-weight:500}
-  .mobile-auth a:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
+  .mobile-join{display:block;margin-top:24px}
+  .mobile-join svg{flex-shrink:0}
 }
-
 .telegram-contacts{display:grid;grid-template-columns:.9fr 1.1fr;gap:9%;padding:0 0 100px}
 .telegram-contacts-intro h2{font-size:clamp(32px,4vw,52px);font-weight:550;line-height:1.08;letter-spacing:-.035em;max-width:9em}
 .telegram-contacts-intro p{max-width:28em;margin-top:22px;color:var(--muted);line-height:1.65}
@@ -354,8 +351,6 @@ html.lenis { scroll-behavior:auto; }
 
 .site-header nav>a,.site-header nav>.nav-login{display:flex;align-items:center;justify-content:flex-start;gap:8px}
 .site-header nav>a>svg,.site-header nav>.nav-login>svg{flex-shrink:0;color:var(--accent)}
-.mobile-auth a{gap:8px}
-.mobile-auth a>svg{flex-shrink:0}
 
 .document-links a,.account-footer>a{display:inline-flex;align-items:center;gap:8px}
 .document-links a>svg,.account-footer>a>svg,.account-footer>button>svg{flex-shrink:0;color:currentColor}
