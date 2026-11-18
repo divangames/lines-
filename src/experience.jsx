@@ -80,6 +80,8 @@ import art05_1 from './assets/scenarios/05_1.webp';
 import art05_2 from './assets/scenarios/05_2.webp';
 import art05_3 from './assets/scenarios/05_3.webp';
 
+const SCENARIO_DWELL_MS = 12000;
+
 const routes = [
   {art:[art01], label:'Игры', icon:Gamepad2, end:'Отряд', title:'Игра с друзьями', text:'В Warframe не приходит приглашение в отряд? В Destiny 2 затянулся поиск матча? Сравните, как игра подключается к другим игрокам с обычным маршрутом и через Линию.'},
   {art:[art02_1,art02_2], label:'Общение', icon:MessageCircle, end:'Канал', title:'Discord и Telegram', text:'Отправьте ссылку на матч в Telegram и зайдите в голосовой канал Discord, чтобы обсудить тактику с командой.'},
@@ -144,6 +146,31 @@ function ScenarioBubble({selected,swipe}) {
     return ()=>{observer.disconnect();swipe.current=null;};
   },[selected,swipe]);
   return <span ref={bubble} className="scenario-bubble" aria-hidden="true"/>;
+}
+
+function ScenarioCopy({title,text,entered}) {
+  const [count,setCount]=useState(()=>matchMedia('(prefers-reduced-motion: reduce)').matches?title.length:0);
+  useEffect(()=>{
+    const preference=matchMedia('(prefers-reduced-motion: reduce)');
+    let timer;
+    function start(){
+      clearInterval(timer);
+      if(preference.matches){setCount(title.length);return;}
+      if(!entered)return;
+      let current=0;setCount(0);
+      timer=setInterval(()=>{
+        current=Math.min(current+1,title.length);setCount(current);
+        if(current===title.length)clearInterval(timer);
+      },45);
+    }
+    start();preference.addEventListener('change',start);
+    return()=>{clearInterval(timer);preference.removeEventListener('change',start);};
+  },[title,entered]);
+  const complete=count>=title.length;
+  return <div className="scenario-copy" data-ready={complete?'true':'false'}>
+    <h3 className="scenario-typed-title" aria-label={title}><span className="scenario-title-space" aria-hidden="true">{title}</span><span className="scenario-title-ink" aria-hidden="true">{title.slice(0,count)}</span></h3>
+    <p className="scenario-copy-text">{text}</p>
+  </div>;
 }
 
 export function ServiceStories() {
@@ -237,7 +264,7 @@ export function ServiceStories() {
       clearTimeout(timer);
       if(!document.hidden)timer=setTimeout(()=>{
         if(!gesture.current&&desired.current===selected)select((selected+1)%routes.length,1);
-      },3000);
+      },SCENARIO_DWELL_MS);
     }
     schedule();
     document.addEventListener('visibilitychange',schedule);
@@ -266,7 +293,7 @@ export function ServiceStories() {
 
       <div className="scenario-detail" aria-live={paused?'polite':'off'}>
         <div key={route.label} className="scenario-map" aria-hidden="true"><span><Monitor/>Устройство</span><i/><span><LineMark/>Линия</span><i/><span><Icon/>{route.end}</span></div>
-        <h3>{route.title}</h3><p>{route.text}</p>
+        <ScenarioCopy key={"copy-"+route.label} title={route.title} text={route.text} entered={entered}/>
       </div>
     </div>
   </section>;

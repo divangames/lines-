@@ -31,8 +31,19 @@
 .scenario-map i { flex:1; height:2px; position:relative; margin:0 6px 24px; background:#becfe9; }
 .scenario-map i::after { content:''; position:absolute; inset:0; background:#255fd9; transform-origin:left; }
 @media (prefers-reduced-motion:no-preference) {
-  .scenario-map i::after { animation:route-progress .48s ease-out both; }
-  .scenario-map i:nth-of-type(2)::after { animation-delay:.32s; }
+  .scenario-panel:not(.has-entered) .scenario-map i::after { transform:scaleX(0); }
+  .has-entered .scenario-map span>svg { animation:route-node-elastic 1.2s var(--ease) .2s both; }
+  .has-entered .scenario-map span:nth-of-type(2)>svg { animation-delay:3.2s; }
+  .has-entered .scenario-map span:nth-of-type(3)>svg { animation-delay:6.2s; }
+  .has-entered .scenario-map i::after { animation:route-progress 1.8s ease-in-out 1.4s both; }
+  .has-entered .scenario-map i:nth-of-type(2)::after { animation-delay:4.4s; }
+}
+@keyframes route-node-elastic {
+  0%,100% { transform:scale(1); }
+  35% { transform:scale(1.2); }
+  57% { transform:scale(.96); }
+  76% { transform:scale(1.06); }
+  90% { transform:scale(.99); }
 }
 @keyframes route-progress { from { transform:scaleX(0); } to { transform:scaleX(1); } }
 .scenario-detail h3 { font-size:clamp(26px,3vw,44px); line-height:1.12; margin:0; }
@@ -407,3 +418,11 @@ html.lenis { scroll-behavior:auto; }
 .nav-join-label{display:inline-flex;align-items:center;justify-content:center;gap:8px;white-space:nowrap}
 .nav-join-label>svg{flex-shrink:0;color:var(--accent)}
 @media(max-width:650px){.nav-join-label>svg{color:currentColor}}
+
+/* Reserve complete text geometry while the title types, then reveal the copy. */
+.scenario-typed-title{position:relative}
+.scenario-title-space{visibility:hidden}
+.scenario-title-ink{position:absolute;inset:0}
+.scenario-copy-text{opacity:0;transform:translateY(6px);transition:opacity .45s var(--ease),transform .45s var(--ease)}
+.scenario-copy[data-ready="true"] .scenario-copy-text{opacity:1;transform:translateY(0)}
+@media(prefers-reduced-motion:reduce){.scenario-copy-text{opacity:1;transform:none;transition:none}}
