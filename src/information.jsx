@@ -198,7 +198,7 @@ export function Plans({terms}) {
     <div className="plan-information">
       <section className="included-features" aria-labelledby="included-title">
         <h3 id="included-title">Во всех пакетах</h3>
-        <ul>{[[UserRound,'Личный кабинет'],[BookOpen,'Инструкции для Happ и v2RayTun'],[Globe2,'Прямое подключение к доменам .ru и .рф'],[ShieldCheck,'Сетевой фильтр рекламы и трекеров']].map(([Icon,label])=>
+        <ul>{[[UserRound,'Личный кабинет'],[BookOpen,'Инструкции по подключению устройств'],[Globe2,'Прямое подключение к доменам .ru и .рф'],[ShieldCheck,'Сетевой фильтр рекламы и трекеров']].map(([Icon,label])=>
           <li key={label}><Icon size={19} aria-hidden="true"/><span>{label}</span></li>)}</ul>
         <div className="included-video"><Play size={18} aria-hidden="true"/><p><strong>Отдельный маршрут YouTube</strong>Доступен действующим подключениям. Разделение по пакетам планируется позднее.</p></div>
       </section>
