@@ -1,0 +1,55 @@
+.account-page .support-chat{background:var(--surface,#fff);border:1px solid var(--line);border-radius:18px;padding:clamp(16px,3vw,28px);min-width:0;color:var(--text)}
+.support-chat{scroll-margin-top:90px}.support-admin{display:grid;gap:18px}.support-admin .support-chat{margin:16px 0}
+.support-chat h2,.support-admin h2{margin:0 0 16px}.support-admin details{margin-top:16px}.support-admin summary{cursor:pointer}
+.support-history{max-height:420px;overflow:auto;display:grid;align-content:start;gap:10px;margin:14px 0;padding:4px;overscroll-behavior:contain}
+.support-history article{padding:10px 14px;background:var(--bg);border-radius:12px;max-width:90%;width:fit-content;min-width:0}
+.support-history article.own{justify-self:end;background:var(--selected,#e0e9fc)}.support-history article header{display:flex;flex-wrap:wrap;gap:12px;align-items:center}
+.support-history article p{margin:5px 0;white-space:pre-wrap;overflow-wrap:anywhere}.support-history time,.support-chat small{font-size:.78rem;color:var(--muted)}
+.support-history article a{display:inline-flex;align-items:center;gap:6px;overflow-wrap:anywhere}.support-history article small{display:block}
+.support-admin form,.support-chat form,.support-admin label,.support-chat form>label{display:grid;gap:7px}.support-admin form{margin-top:10px}
+
+.support-actions{display:flex;align-items:center;gap:10px;flex-wrap:wrap}.support-actions label.button{display:inline-flex;position:relative;overflow:hidden;overflow-wrap:anywhere;max-width:100%}
+.support-actions input[type=file]{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%}.support-actions label:focus-within{outline:2px solid #497dd4}
+.support-admin form>.button,.support-chat form>.button{justify-self:start}
+.account-page .support-chat>h2{font-size:clamp(21px,1.55vw,26px);line-height:1.2;letter-spacing:-.025em;margin:0 0 16px}
+.support-admin .support-chat>h2,.news-preview>h3{font-size:20px;line-height:1.25;letter-spacing:-.015em;margin:0 0 12px}
+.news-composer form,.news-preview{max-width:760px}.news-composer form{gap:14px}.news-composer fieldset{display:flex;flex-wrap:wrap;gap:16px;border:0;margin:0;padding:0}
+.news-composer legend{margin-bottom:8px}.news-composer fieldset label{display:flex;align-items:center;gap:7px}.news-composer input[type=radio]{width:auto}
+.news-schedule{display:flex;align-items:end;flex-wrap:wrap;gap:12px}.news-schedule small,.news-photo span{align-self:center}
+.news-photo{display:flex;align-items:center;gap:12px;flex-wrap:wrap}.news-photo img{max-width:100px;max-height:90px;border-radius:8px}
+.news-preview article{padding:14px;border:1px solid var(--line);border-radius:14px;max-width:460px;background:var(--bg)}
+.news-preview article img{display:block;max-width:100%;max-height:320px;border-radius:8px}
+.news-preview article p{white-space:pre-wrap;overflow-wrap:anywhere;color:var(--text)}.news-preview p{margin:12px 0}
+.news-bot-buttons{display:flex;gap:6px}.news-bot-buttons span{background:#e1ebf7;padding:6px 12px;border-radius:6px;font-size:14px}
+
+.support-admin{grid-template-columns:minmax(0,1.65fr) minmax(250px,1fr);column-gap:clamp(28px,4vw,70px);row-gap:0;align-items:start}
+.support-admin>section{min-width:0}
+.support-admin .support-inbox{padding-top:0;border:0}
+.support-admin .support-notification{padding:0 0 28px}
+.support-admin .section-header{margin-bottom:20px}
+.support-admin .support-chat{border-top:1px solid var(--line);padding-top:20px;margin:22px 0}
+.support-admin .support-chat>h2,.support-admin .news-composer>h2{font-size:20px;line-height:1.2;letter-spacing:-.025em}
+.support-admin .support-notification h2{font-size:22px;line-height:1.2;letter-spacing:-.025em}
+.support-admin .support-notification>p{margin:10px 0 16px}
+.support-admin label,.support-admin legend{font-size:13px}
+.support-admin small{font-size:12px;color:var(--muted)}
+.support-admin .support-publisher{grid-column:1/-1;border-top:1px solid var(--line)}
+.publisher-switch{display:inline-flex;flex-wrap:wrap;gap:4px;padding:4px;background:var(--bg);border-radius:24px;margin-bottom:22px}
+.publisher-switch button{border:0;background:transparent;border-radius:20px;color:var(--muted);font:inherit;font-size:13px;padding:9px 16px;min-height:40px;cursor:pointer}
+.publisher-switch button[aria-pressed=true]{background:var(--surface);color:var(--accent);box-shadow:0 1px 3px #18202e20}
+.support-admin .news-composer>p{font-size:13px;margin:8px 0 18px}
+.support-admin .news-composer input[type=file]::file-selector-button{border:0;background:var(--raised);color:var(--text);padding:8px 12px;border-radius:20px;margin-right:12px;font:inherit}
+@media(max-width:960px){.support-admin{grid-template-columns:minmax(0,1fr)}.support-admin .support-notification{padding:22px 0;border-top:1px solid var(--line)}}
+@media(max-width:520px){.publisher-switch button{min-height:44px}.support-admin .support-chat{margin:16px 0}.news-schedule>label{flex:1;min-width:110px}}
+.post-marks,.post-options,.post-tool-input{display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+.post-marks button{font:inherit;font-size:13px;color:var(--text);background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:7px 10px;cursor:pointer}
+.post-marks button:hover,.post-marks button:focus-visible{color:var(--accent);border-color:var(--accent)}
+.post-tool-input{margin-top:10px}.post-tool-input label{flex:1;min-width:160px}
+.post-options{gap:12px}.support-admin .post-options label{display:flex;align-items:center;gap:7px}.post-options input{width:16px;height:16px;accent-color:var(--accent)}
+.post-preview-text{white-space:pre-wrap;overflow-wrap:anywhere;margin:8px 0}.post-preview-text blockquote,.post-preview-text pre{margin:6px 0;padding:6px 10px;border-left:3px solid var(--accent);white-space:pre-wrap}
+.post-secret{background:var(--muted);color:transparent;cursor:pointer}.post-secret.revealed{background:var(--raised);color:var(--text)}
+.photo-cover{width:100%;min-height:100px;background:var(--raised);border:1px solid var(--line);border-radius:8px;color:var(--text);cursor:pointer}
+.post-marks .post-format-icon{display:inline-grid;place-items:center;width:36px;height:36px;padding:0}
+@media(pointer:coarse){.post-marks .post-format-icon{width:44px;height:44px}}
+
+.post-group-name{display:flex;align-items:center;gap:8px}.post-group-name .icon-button{flex-shrink:0}

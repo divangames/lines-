@@ -36,7 +36,7 @@ class CredentialFields(BaseModel):
         value = str(value).strip().lower()
         if not value:
             return None
-        if not re.fullmatch(r'[a-z0-9][a-z0-9._-]{2,63}', value):
+        if not re.fullmatch(r'(?:[a-z0-9][a-z0-9._-]{2,63}|\+[1-9][0-9]{6,14})', value):
             raise ValueError('Логин: 3–64 латинские буквы, цифры, точка, дефис или подчёркивание')
         return value
 
@@ -121,6 +121,8 @@ def make_router(admin_dependency, check_origin, csrf, access_view):
             attempt = (current, secrets.token_hex(8))
             attempts.append(attempt)
         username = body.username.strip().lower()
+        if username.startswith('+'):
+            username = re.sub(r'[ ()-]', '', username)
         with store.db() as connection:
             row = connection.execute('SELECT id,account_password_hash FROM clients WHERE account_username=? AND deleted=0', (username,)).fetchone()
         expected = row['account_password_hash'] if row and row['account_password_hash'] else DUMMY_HASH
@@ -235,4 +237,6 @@ def make_router(admin_dependency, check_origin, csrf, access_view):
             credentials = save_credentials(connection, client_id, body.account_username, body.account_password, force=True)
         return {'id': client_id, 'account_username': credentials['username'], 'account_credentials': credentials}
 
+    from .support_api import router as support_router
+    router.include_router(support_router(admin_dependency, authenticated_user))
     return router

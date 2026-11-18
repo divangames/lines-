@@ -151,9 +151,14 @@ def credit(conn,friend):
     if row["paid_at"] is not None:
         return
     now = store.now()
+    from . import support
+    previous = conn.execute("SELECT expires_at FROM clients WHERE id=?", (row["partner"],)).fetchone()[0]
     updated = conn.execute("""UPDATE clients SET expires_at=CASE WHEN expires_at IS NULL THEN NULL
         ELSE MAX(expires_at,?)+? END WHERE id=? AND deleted=0""",(now,row["days"]*86400,row["partner"]))
     if not updated.rowcount:
         raise HTTPException(409, "Доступ пригласившего пользователя архивирован")
     conn.execute("UPDATE referrals SET paid_at=? WHERE friend=?", (now,friend))
+    support.payment(conn,friend,"Первая оплата по приглашению")
+    after = conn.execute("SELECT expires_at FROM clients WHERE id=?",(row["partner"],)).fetchone()[0]
+    support.renewal(conn,row["partner"],previous,after)
     store.event("referral_reward",row["partner"],f"+{row['days']} дн. за первую оплату",connection=conn)

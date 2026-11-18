@@ -49,7 +49,7 @@ def db():
 
 
 def initialize():
-    from . import partners
+    from . import partners, telegram, support
     with db() as connection:
         connection.executescript("""
         PRAGMA journal_mode=WAL;
@@ -80,6 +80,8 @@ def initialize():
         """)
         columns = {row['name'] for row in connection.execute('PRAGMA table_info(clients)')}
         partners.initialize(connection)
+        telegram.initialize(connection)
+        support.initialize(connection)
         if 'account_username' not in columns:
             connection.execute('ALTER TABLE clients ADD COLUMN account_username TEXT')
         if 'account_password_hash' not in columns:

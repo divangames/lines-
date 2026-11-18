@@ -26,7 +26,7 @@ from pydantic import BaseModel, ConfigDict, Field, field_validator
 from starlette.websockets import WebSocketDisconnect
 from websockets.asyncio.client import connect as ws_connect
 
-from . import engine, store, routing, accounts, partners
+from . import engine, store, routing, accounts, partners, telegram, support
 
 LOG = logging.getLogger("linea")
 CONNECTIONS = defaultdict(set)
@@ -68,7 +68,11 @@ async def lifespan(app):
     except Exception:
         LOG.warning("VPN engine is not ready; background reconciliation will retry")
     worker = asyncio.create_task(statistics_loop())
+    messenger = asyncio.create_task(support.worker())
     yield
+    messenger.cancel()
+    with suppress(asyncio.CancelledError):
+        await messenger
     worker.cancel()
     with suppress(asyncio.CancelledError):
         await worker
@@ -137,6 +141,10 @@ async def headers_and_limits(request, call_next):
     response.headers["Permissions-Policy"] = "camera=(), microphone=(), geolocation=()"
     if not store.DEVELOPMENT:
         response.headers["Content-Security-Policy"] = "default-src 'self'; script-src 'self'; style-src 'self'; font-src 'self'; img-src 'self' data:; connect-src 'self' https://speed.cloudflare.com; object-src 'none'; base-uri 'self'; frame-ancestors 'none'; form-action 'self'"
+    if request.url.path.rstrip("/") == "/account/mini":
+        del response.headers["X-Frame-Options"]
+        if not store.DEVELOPMENT:
+            response.headers["Content-Security-Policy"] = response.headers["Content-Security-Policy"].replace("frame-ancestors 'none'", "frame-ancestors https://web.telegram.org https://*.web.telegram.org").replace("script-src 'self'", "script-src 'self' https://telegram.org")
     if request.url.path.startswith(("/api", "/sub", "/connect", "/admin", "/account")):
         response.headers["Cache-Control"] = "no-store"
         response.headers["X-Robots-Tag"] = "noindex, nofollow"
@@ -321,6 +329,7 @@ async def update_client(client_id: str, body: ClientInput, _=Depends(admin)):
             with store.db() as conn:
                 conn.execute("UPDATE clients SET name=?,note=?,quota_bytes=?,expires_at=?,enabled=? WHERE id=?",
                              (body.name.strip(), body.note, round(body.quota_gb * 1024**3), body.expires_at or None, int(body.enabled), client_id))
+                support.renewal(conn, client_id, previous["expires_at"], body.expires_at or None)
                 credentials = accounts.save_credentials(conn, client_id, body.account_username, body.account_password)
                 store.event("enabled" if body.enabled and not previous["enabled"] else ("disabled" if not body.enabled and previous["enabled"] else "updated"), client_id, connection=conn)
             try:
@@ -506,7 +515,7 @@ def subscription_response(token: str, request: Request):
         raise HTTPException(403, "Доступ приостановлен, закончился срок или трафик")
     with store.db() as conn:
         conn.execute("UPDATE clients SET subscription_fetches=subscription_fetches+1,last_sync_at=? WHERE id=?", (store.now(), row["id"]))
-    title = "base64:" + base64.b64encode(store.settings()["name"].encode()).decode()
+    title = "base64:" + base64.b64encode(engine.profile_name(row).encode()).decode()
     headers = {"profile-title": title, "profile-update-interval": "1",
                "subscription-userinfo": f"upload={row['uploaded']}; download={row['downloaded']}; total={row['quota_bytes']}; expire={row['expires_at'] or 0}",
                "profile-web-page-url": store.BASE_URL + "/connect/" + row["token"],
@@ -605,6 +614,7 @@ async def tunnel(websocket: WebSocket, key: str):
             await websocket.close()
 
 
+app.include_router(telegram.make_router(check_origin, csrf, access_view))
 app.include_router(accounts.make_router(admin, check_origin, csrf, access_view))
 
 

@@ -30,11 +30,15 @@ def ad_filter_asset():
     return 'linea-ads.dat'
 
 
+def profile_name(row):
+    return f"🇵🇱 Польша · {store.settings()['name']} · {row['name']}"
+
+
 def uri(row):
     host = store.CONFIG["server_host"]
     query = urlencode({"encryption": "none", "security": "tls", "sni": host, "fp": "chrome",
                        "type": "ws", "host": host, "path": "/tunnel/" + row["tunnel_key"]})
-    return f"vless://{row['uuid']}@{host}:443?{query}#{quote(store.settings()['name'] + ' · ' + row['name'])}"
+    return f"vless://{row['uuid']}@{host}:443?{query}#{quote(profile_name(row))}"
 
 
 def xray_config(rows):
